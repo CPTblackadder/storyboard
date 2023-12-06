@@ -1,8 +1,8 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 # Create your views here.
 
 
 def painter(request):
-    return HttpResponse("This is where the painting app will go")
+    return render(request, "painter/index.html", {})
