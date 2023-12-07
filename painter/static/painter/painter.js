@@ -53,6 +53,7 @@ function redraw() {
         ctx.moveTo(linesArray[i - 1].x, linesArray[i - 1].y);
         ctx.lineWidth = linesArray[i].size;
         ctx.lineCap = "round";
+        ctx.lineJoin = "round";
         ctx.strokeStyle = linesArray[i].color;
         ctx.lineTo(linesArray[i].x, linesArray[i].y);
         ctx.stroke();
@@ -105,6 +106,7 @@ function load() {
             ctx.moveTo(linesArray[i - 1].x, linesArray[i - 1].y);
             ctx.lineWidth = linesArray[i].size;
             ctx.lineCap = "round";
+            ctx.lineJoin = "round";
             ctx.strokeStyle = linesArray[i].color;
             ctx.lineTo(linesArray[i].x, linesArray[i].y);
             ctx.stroke();
@@ -143,6 +145,7 @@ function mousedown(canvas, evt) {
     ctx.beginPath();
     ctx.lineWidth = currentSize;
     ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     ctx.strokeStyle = currentColor;
 
 }
