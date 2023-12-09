@@ -28,15 +28,22 @@ document.getElementById('bgcolorpicker').addEventListener('change', function () 
     redraw();
     currentBg = ctx.fillStyle;
 });
+/*
 document.getElementById('controlSize').addEventListener('change', function () {
     currentSize = this.value;
     document.getElementById("showSize").innerHTML = this.value;
 });
+*/
+
+document.getElementById('submitImage').addEventListener('click', submitCanvas);
+
+
 document.getElementById('saveToImage').addEventListener('click', function () {
     downloadCanvas(this, 'canvas', 'masterpiece.png');
 }, false);
 document.getElementById('eraser').addEventListener('click', eraser);
 document.getElementById('clear').addEventListener('click', createCanvas);
+/*
 document.getElementById('save').addEventListener('click', save);
 document.getElementById('load').addEventListener('click', load);
 document.getElementById('clearCache').addEventListener('click', function () {
@@ -44,6 +51,7 @@ document.getElementById('clearCache').addEventListener('click', function () {
     linesArray = [];
     console.log("Cache cleared!");
 });
+*/
 
 // REDRAW 
 
@@ -70,14 +78,35 @@ canvas.addEventListener('mouseup', mouseup);
 
 function createCanvas() {
     canvas.id = "canvas";
-    canvas.width = parseInt(document.getElementById("sizeX").value);
-    canvas.height = parseInt(document.getElementById("sizeY").value);
+    canvas.width = 800;
+    canvas.height = 600;
     canvas.style.zIndex = 8;
     canvas.style.position = "absolute";
     canvas.style.border = "1px solid";
     ctx.fillStyle = currentBg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     body.appendChild(canvas);
+}
+
+// SUBMIT CANVAS
+
+function submitCanvas() {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    var dataURL = canvas.toDataURL("image/png")
+    return fetch("submit", {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photo: dataURL }),
+        mode: 'same-origin' // Do not send CSRF token to another domain.
+    }).then(function (value) {
+        if (value.ok) {
+            return value.json().then(function (response) {
+                debugger;
+            })
+        }
+    }).catch(function (reason) {
+        debugger;
+    })
 }
 
 // DOWNLOAD CANVAS
