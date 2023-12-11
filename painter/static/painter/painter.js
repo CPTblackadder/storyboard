@@ -1,5 +1,4 @@
 // SETTING ALL VARIABLES
-
 var isMouseDown = false;
 var canvas = document.createElement('canvas');
 var body = document.getElementsByTagName("body")[0];
@@ -10,11 +9,9 @@ var currentColor = "rgb(200, 20, 100))";
 var currentBg = "white";
 
 // INITIAL LAUNCH
-
 createCanvas();
 
 // BUTTON EVENT HANDLERS
-
 document.getElementById('colorpicker').addEventListener('change', function () {
     currentColor = this.value;
 });
@@ -49,7 +46,6 @@ document.getElementById('clearCache').addEventListener('click', function () {
 
 
 // REDRAW 
-
 function redraw() {
     for (var i = 1; i < linesArray.length; i++) {
         ctx.beginPath();
@@ -64,7 +60,6 @@ function redraw() {
 }
 
 // DRAWING EVENT HANDLERS
-
 canvas.addEventListener('mousedown', function () { mousedown(canvas, event); });
 canvas.addEventListener('mousemove', function () { mousemove(canvas, event); });
 canvas.addEventListener('mouseup', mouseup);
@@ -106,14 +101,12 @@ function submitCanvas() {
 }
 
 // DOWNLOAD CANVAS
-
 function downloadCanvas(link, canvas, filename) {
     link.href = document.getElementById(canvas).toDataURL();
     link.download = filename;
 }
 
 // SAVE FUNCTION
-
 function save() {
     localStorage.removeItem("savedCanvas");
     localStorage.setItem("savedCanvas", JSON.stringify(linesArray));
@@ -121,7 +114,6 @@ function save() {
 }
 
 // LOAD FUNCTION
-
 function load() {
     if (localStorage.getItem("savedCanvas") != null) {
         linesArray = JSON.parse(localStorage.savedCanvas);
@@ -144,14 +136,12 @@ function load() {
 }
 
 // ERASER HANDLING
-
 function eraser() {
     currentSize = 50;
     currentColor = ctx.fillStyle
 }
 
 // GET MOUSE POSITION
-
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
     return {
@@ -161,7 +151,6 @@ function getMousePos(canvas, evt) {
 }
 
 // ON MOUSE DOWN
-
 function mousedown(canvas, evt) {
     var mousePos = getMousePos(canvas, evt);
     isMouseDown = true
@@ -172,11 +161,9 @@ function mousedown(canvas, evt) {
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.strokeStyle = currentColor;
-
 }
 
 // ON MOUSE MOVE
-
 function mousemove(canvas, evt) {
     if (isMouseDown) {
         var currentPosition = getMousePos(canvas, evt);
@@ -187,7 +174,6 @@ function mousemove(canvas, evt) {
 }
 
 // STORE DATA
-
 function store(x, y, s, c) {
     var line = {
         "x": x,
@@ -199,7 +185,6 @@ function store(x, y, s, c) {
 }
 
 // ON MOUSE UP
-
 function mouseup() {
     isMouseDown = false
     store()
