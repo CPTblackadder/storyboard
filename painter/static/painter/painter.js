@@ -15,10 +15,6 @@ createCanvas();
 
 // BUTTON EVENT HANDLERS
 
-document.getElementById('canvasUpdate').addEventListener('click', function () {
-    createCanvas();
-    redraw();
-});
 document.getElementById('colorpicker').addEventListener('change', function () {
     currentColor = this.value;
 });
@@ -28,12 +24,11 @@ document.getElementById('bgcolorpicker').addEventListener('change', function () 
     redraw();
     currentBg = ctx.fillStyle;
 });
-/*
 document.getElementById('controlSize').addEventListener('change', function () {
     currentSize = this.value;
     document.getElementById("showSize").innerHTML = this.value;
 });
-*/
+
 
 document.getElementById('submitImage').addEventListener('click', submitCanvas);
 
@@ -43,7 +38,7 @@ document.getElementById('saveToImage').addEventListener('click', function () {
 }, false);
 document.getElementById('eraser').addEventListener('click', eraser);
 document.getElementById('clear').addEventListener('click', createCanvas);
-/*
+
 document.getElementById('save').addEventListener('click', save);
 document.getElementById('load').addEventListener('click', load);
 document.getElementById('clearCache').addEventListener('click', function () {
@@ -51,7 +46,7 @@ document.getElementById('clearCache').addEventListener('click', function () {
     linesArray = [];
     console.log("Cache cleared!");
 });
-*/
+
 
 // REDRAW 
 
@@ -73,6 +68,14 @@ function redraw() {
 canvas.addEventListener('mousedown', function () { mousedown(canvas, event); });
 canvas.addEventListener('mousemove', function () { mousemove(canvas, event); });
 canvas.addEventListener('mouseup', mouseup);
+canvas.addEventListener('mouseleave', mouseup)
+canvas.addEventListener('mouseenter', (event) => {
+    if (event.buttons & 1) {
+        mousedown(canvas, event);
+    }
+})
+
+
 
 // CREATE CANVAS
 
@@ -99,11 +102,7 @@ function submitCanvas() {
         body: JSON.stringify({ photo: dataURL }),
         mode: 'same-origin' // Do not send CSRF token to another domain.
     }).then(function (value) {
-        if (value.ok) {
-            return value.json().then(function (response) {
-                debugger;
-            })
-        }
+        document.location.href = value.url
     }).catch(function (reason) {
         debugger;
     })
@@ -182,7 +181,6 @@ function mousedown(canvas, evt) {
 // ON MOUSE MOVE
 
 function mousemove(canvas, evt) {
-
     if (isMouseDown) {
         var currentPosition = getMousePos(canvas, evt);
         ctx.lineTo(currentPosition.x, currentPosition.y)
