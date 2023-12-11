@@ -70,15 +70,13 @@ canvas.addEventListener('mousemove', function () { mousemove(canvas, event); });
 canvas.addEventListener('mouseup', mouseup);
 canvas.addEventListener('mouseleave', mouseup)
 canvas.addEventListener('mouseenter', (event) => {
+    // Bitwise and to check if left mouse button is held down
     if (event.buttons & 1) {
         mousedown(canvas, event);
     }
 })
 
-
-
 // CREATE CANVAS
-
 function createCanvas() {
     canvas.id = "canvas";
     canvas.width = 800;
@@ -92,7 +90,6 @@ function createCanvas() {
 }
 
 // SUBMIT CANVAS
-
 function submitCanvas() {
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     var dataURL = canvas.toDataURL("image/png")
