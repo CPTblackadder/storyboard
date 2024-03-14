@@ -1,1 +1,25 @@
-{}
+{
+	"nodes":[
+		{"id":"8ff3a5d15be2ee3f","x":-342,"y":-69,"width":250,"height":229,"type":"text","text":"Story viewing page\n- See the all images in the existing story\n- See a highlight of the story contest is story is not finished"},
+		{"id":"048f5659ca39b143","x":-342,"y":-284,"width":250,"height":60,"type":"text","text":"Landing Page"},
+		{"id":"cdb7f836ad0f97d4","x":240,"y":-301,"width":250,"height":141,"type":"text","text":"Painter\n- Have a additional text box for adding story title\n"},
+		{"id":"7f45eccf91c66bd4","x":-820,"y":-160,"width":250,"height":60,"type":"text","text":"All Stories Page"},
+		{"id":"682f1db131fe8d81","x":165,"y":330,"width":250,"height":60,"type":"text","text":"All potential images for story"},
+		{"id":"9d19710d9d6fdc85","x":240,"y":480,"width":50,"height":50,"type":"text","text":""},
+		{"id":"9605d9df779dc2e4","x":-945,"y":335,"width":250,"height":110,"type":"text","text":"View Story Contest results that lead to that image being selected"},
+		{"id":"3f67e3ed30c79b66","x":290,"y":0,"width":330,"height":220,"type":"text","text":"Painter\n- Have a image and description for the directly preceding image in this story"}
+	],
+	"edges":[
+		{"id":"059ab796fb6292f1","fromNode":"048f5659ca39b143","fromSide":"bottom","toNode":"8ff3a5d15be2ee3f","toSide":"top","label":"View a highlighted story"},
+		{"id":"9cd31072fc852337","fromNode":"048f5659ca39b143","fromSide":"right","toNode":"cdb7f836ad0f97d4","toSide":"left","label":"Create Story"},
+		{"id":"55c1938a8f49ae89","fromNode":"8ff3a5d15be2ee3f","fromSide":"right","toNode":"3f67e3ed30c79b66","toSide":"left","label":"Add Image to Story"},
+		{"id":"d3aa0f41b27c2b76","fromNode":"8ff3a5d15be2ee3f","fromSide":"bottom","toNode":"682f1db131fe8d81","toSide":"top","label":"View Story Contest"},
+		{"id":"5371ad9f5ae63f17","fromNode":"682f1db131fe8d81","fromSide":"left","toNode":"9d19710d9d6fdc85","toSide":"left","label":"Vote on an image"},
+		{"id":"f647852575e3fc43","fromNode":"048f5659ca39b143","fromSide":"left","toNode":"7f45eccf91c66bd4","toSide":"top","label":"View all stories"},
+		{"id":"c1b1b136ae7fbf94","fromNode":"7f45eccf91c66bd4","fromSide":"bottom","toNode":"8ff3a5d15be2ee3f","toSide":"left","label":"View a particular Story"},
+		{"id":"76afd4bf53095964","fromNode":"8ff3a5d15be2ee3f","fromSide":"bottom","toNode":"9605d9df779dc2e4","toSide":"top","label":"Click a specific Image"},
+		{"id":"bf075c2c996de3b6","fromNode":"9d19710d9d6fdc85","fromSide":"right","toNode":"682f1db131fe8d81","toSide":"right","label":"Return to page, with vote added"},
+		{"id":"f13f3815931cfb51","fromNode":"3f67e3ed30c79b66","fromSide":"bottom","toNode":"682f1db131fe8d81","toSide":"top","label":"Submit"},
+		{"id":"4c4679ab9089fb37","fromNode":"cdb7f836ad0f97d4","fromSide":"bottom","toNode":"8ff3a5d15be2ee3f","toSide":"right","label":"Submit"}
+	]
+}

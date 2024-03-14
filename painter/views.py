@@ -1,9 +1,11 @@
 import base64
 import json
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect
+
 from django.core.files.base import ContentFile
-from .models import Image
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import Story, StoryContestImageModel
 
 # Create your views here.
 
@@ -20,9 +22,10 @@ def submit(request):
             img_format, img_str = photo.split(";base64,")
             ext = img_format.split("/")[-1]
             img_data = ContentFile(base64.b64decode(img_str), name="temp." + ext)
-            image = Image.objects.create()
+            image = StoryContestImageModel.objects.create()
             print("Saving file " + "image_" + str(image.pk) + ".png")
-            image.photo.save("image_" + str(image.pk) + ".png", img_data)
+            image.image.save("image_" + str(image.pk) + ".png", img_data)
+            # image.story_contest =
             image.save()
             return redirect(view_all)
         except Exception as err:
@@ -33,6 +36,18 @@ def submit(request):
 
 
 def view_all(request):
-    data = Image.objects.all()
+    data = StoryContestImageModel.objects.all()
     context = {"data": data}
-    return render(request, "painter/view_all.html", context)
+    return render(request, "painter/view_all_images.html", context)
+
+
+def view_stories(request):
+    data = Story.objects.all()
+    context = {"data": data}
+    return render(request, "painter/view_all_stories.html", context)
+
+
+def main(request):
+    data = Story.objects.all()
+    context = {"data": data}
+    return render(request, "painter/landingpage.html", context)

@@ -1,3 +1,23 @@
 {
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "isort.check": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "analysis.typeCheckingMode": "basic",
+        "editor.rulers": [
+            {
+                "column": 88,
+                "color": "#252525"
+            }
+        ],
+        "editor.semanticHighlighting.enabled": true,
+    },
+    "isort.args": [
+        "--profile",
+        "black"
+    ],
 }

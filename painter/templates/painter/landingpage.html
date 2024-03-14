@@ -1,0 +1,24 @@
+{% load static %}
+{% csrf_token %}
+
+  <body class="container">
+    <h1> Storyboard Landing Page </h1>
+    <a href="https://www.example.com">
+      <button>Create new Story</button>
+    </a>
+    <h1> Current Top Stories </h1>
+    <div class="row">
+        {% for x in data %}
+        <div class="col-md-4">
+          <div class="thumbnail">
+            <a href="{{ x.photo.url }}">
+              <img src="{{ x.photo.url }}" alt="Lights" style="width:100%">
+              <div class="caption">
+                <p>{{ x.title }}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+  </body>

@@ -8,27 +8,45 @@
         "type": "tabs",
         "children": [
           {
-            "id": "404dd5df36b539c5",
+            "id": "92e4c39d2090ef50",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "canvas",
+              "state": {
+                "file": "Untitled.canvas",
+                "viewState": {
+                  "x": -22.22455887480089,
+                  "y": 261.57266960938836,
+                  "zoom": -0.3333333333333333
+                }
+              }
             }
           },
           {
-            "id": "92e4c39d2090ef50",
+            "id": "7b6e51cf116683b5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Pages/Home Page.md",
+                "file": "Data/Story Image Contest.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "af52eae348c63b2e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data/Story Images.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -41,16 +59,6 @@
         "id": "6cbdd4a220ef2bb3",
         "type": "tabs",
         "children": [
-          {
-            "id": "1c91bac8593810b3",
-            "type": "leaf",
-            "state": {
-              "type": "file-explorer",
-              "state": {
-                "sortOrder": "alphabetical"
-              }
-            }
-          },
           {
             "id": "f9e32331542a72bf",
             "type": "leaf",
@@ -73,8 +81,19 @@
               "type": "bookmarks",
               "state": {}
             }
+          },
+          {
+            "id": "dbda968409c4f2c3",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -94,7 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Pages/Home Page.md",
+                "file": "Untitled.canvas",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +130,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Pages/Home Page.md",
+                "file": "Untitled.canvas",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -129,12 +148,12 @@
             }
           },
           {
-            "id": "c9f357abdcd0d687",
+            "id": "d6f8dc4fad2d5f86",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Pages/Home Page.md"
+                "file": "Untitled.canvas"
               }
             }
           }
@@ -142,8 +161,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -157,14 +175,22 @@
   },
   "active": "92e4c39d2090ef50",
   "lastOpenFiles": [
-    "Data/Images 1.md",
-    "Pages/Home Page.md",
-    "Data/Images.md",
     "Data/Story.md",
-    "Pages/Painter.md",
     "Untitled.canvas",
+    "Data/Story Images.md",
+    "Data/Story Image Contest.md",
+    "Data/Images.md",
+    "Pages/Painter.md",
+    "Pages/Home Page.md",
+    "Untitled.md",
+    "Untitled Diagram.svg",
+    "2024-03-13.md",
+    "Untitled 2.canvas",
+    "Untitled 1.canvas",
+    "Excalidraw/Drawing 2024-03-13 17.14.26.excalidraw.md",
+    "Excalidraw",
+    "Data/Images 1.md",
     "Data",
-    "Pages",
-    "Untitled.md"
+    "Pages"
   ]
 }
