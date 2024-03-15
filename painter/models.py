@@ -22,10 +22,6 @@ class ActiveStoryContestModel(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    time: models.DateTimeField = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["time"]  # or ['-time'] according to the ordering you require
 
 
 class LockedStoryContestModel(models.Model):
@@ -33,6 +29,10 @@ class LockedStoryContestModel(models.Model):
     winning_image: models.ForeignKey = models.ForeignKey(
         Image, on_delete=models.CASCADE
     )
+    time: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["time"]  # or ['-time'] according to the ordering you require
 
 
 class LockedStoryContestImageModel(models.Model):
@@ -40,7 +40,7 @@ class LockedStoryContestImageModel(models.Model):
         LockedStoryContestModel, on_delete=models.DO_NOTHING
     )
     image: models.ForeignKey = models.ForeignKey(Image, on_delete=models.DO_NOTHING)
-    votes: models.IntegerField = models.IntegerField(name="votes", default=0)
+    votes: models.IntegerField = models.IntegerField(name="votes")
 
     class Meta:
         ordering = ["votes"]
@@ -51,7 +51,10 @@ class StoryContestImageModel(models.Model):
         ActiveStoryContestModel, on_delete=models.DO_NOTHING
     )
     image: models.ForeignKey = models.ForeignKey(Image, on_delete=models.DO_NOTHING)
-    votes: models.IntegerField = models.IntegerField(name="votes", default=0)
 
-    class Meta:
-        ordering = ["votes"]
+
+class StoryContestImageModelVote(models.Model):
+    # user
+    image: models.ForeignKey = models.ForeignKey(
+        StoryContestImageModel, on_delete=models.DO_NOTHING
+    )

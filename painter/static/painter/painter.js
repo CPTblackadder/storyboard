@@ -27,22 +27,11 @@ document.getElementById('controlSize').addEventListener('change', function () {
 });
 
 
-document.getElementById('submitImage').addEventListener('click', submitCanvas);
+// document.getElementById('submitImage').addEventListener('click', submitCanvas);
 
 
-document.getElementById('saveToImage').addEventListener('click', function () {
-    downloadCanvas(this, 'canvas', 'masterpiece.png');
-}, false);
 document.getElementById('eraser').addEventListener('click', eraser);
 document.getElementById('clear').addEventListener('click', createCanvas);
-
-document.getElementById('save').addEventListener('click', save);
-document.getElementById('load').addEventListener('click', load);
-document.getElementById('clearCache').addEventListener('click', function () {
-    localStorage.removeItem("savedCanvas");
-    linesArray = [];
-    console.log("Cache cleared!");
-});
 
 
 // REDRAW 
@@ -82,57 +71,6 @@ function createCanvas() {
     ctx.fillStyle = currentBg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     body.appendChild(canvas);
-}
-
-// SUBMIT CANVAS
-function submitCanvas() {
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    var dataURL = canvas.toDataURL("image/png")
-    return fetch("submit", {
-        method: 'POST',
-        headers: { 'X-CSRFToken': csrftoken, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ photo: dataURL }),
-        mode: 'same-origin' // Do not send CSRF token to another domain.
-    }).then(function (value) {
-        document.location.href = value.url
-    }).catch(function (reason) {
-        debugger;
-    })
-}
-
-// DOWNLOAD CANVAS
-function downloadCanvas(link, canvas, filename) {
-    link.href = document.getElementById(canvas).toDataURL();
-    link.download = filename;
-}
-
-// SAVE FUNCTION
-function save() {
-    localStorage.removeItem("savedCanvas");
-    localStorage.setItem("savedCanvas", JSON.stringify(linesArray));
-    console.log("Saved canvas!");
-}
-
-// LOAD FUNCTION
-function load() {
-    if (localStorage.getItem("savedCanvas") != null) {
-        linesArray = JSON.parse(localStorage.savedCanvas);
-        var lines = JSON.parse(localStorage.getItem("savedCanvas"));
-        for (var i = 1; i < lines.length; i++) {
-            ctx.beginPath();
-            ctx.moveTo(linesArray[i - 1].x, linesArray[i - 1].y);
-            ctx.lineWidth = linesArray[i].size;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.strokeStyle = linesArray[i].color;
-            ctx.lineTo(linesArray[i].x, linesArray[i].y);
-            ctx.stroke();
-        }
-        console.log("Canvas loaded.");
-    }
-    else {
-        console.log("No canvas in memory!");
-    }
 }
 
 // ERASER HANDLING

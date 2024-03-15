@@ -1,43 +1,69 @@
 {% load static %}
 {% csrf_token %}
-
 <link rel="stylesheet" href="{% static 'painter/style.css' %}">
 <script defer src="{% static 'painter/painter.js' %}"></script>
-
 <body>
-	<div id="sidebar">
-		<div class="colorButtons">
-			<h3>Colour</h3>
-			<input type="color" id="colorpicker" value="#c81464" class="colorpicker">
-		</div>
-		<div class="colorButtons">
-			<h3>Bg Color</h3>
-			<input type="color" value="#ffffff" id="bgcolorpicker" class="colorpicker">
-		</div>
-
-		<div class="toolsButtons">
-			<h3>Tools</h3>
-			<button id="eraser" class="btn btn-default"><span class="glyphicon glyphicon-erase" aria-hidden="true"></span></button>
-			<button id="clear" class="btn btn-danger"> <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button>
-		</div>
-
-		<div class="buttonSize">
-			<h3>Size (<span id="showSize">5</span>)</h3>
-			<input type="range" min="1" max="50" value="5" step="1" id="controlSize">
-		</div>
-		<div class="Storage">
-			<h3>Storage</h3>
-			<input type="button" value="Save" class="btn btn-warning" id="save">
-			<input type="button" value="Load" class="btn btn-warning" id="load">
-			<input type="button" value="Clear" class="btn btn-warning" id="clearCache">
-		</div>
-		<div class="extra">
-			<h3>Extra</h3>
-			{% if submit_error %}
-				<a>Error: {{ submit_error }} </a>
-			{% endif %}
-			<a id="submitImage" class="btn btn-warning">Submit</a>
-			<a id="saveToImage" class="btn btn-warning">Download</a>
-		</div>
-	</div>		
+    <div id="sidebar">
+        <div class="colorButtons">
+            <h3>Colour</h3>
+            <input type="color" id="colorpicker" value="#c81464" class="colorpicker">
+        </div>
+        <div class="colorButtons">
+            <h3>Bg Color</h3>
+            <input type="color" value="#ffffff" id="bgcolorpicker" class="colorpicker">
+        </div>
+        <div class="toolsButtons">
+            <h3>Tools</h3>
+            <button id="eraser" class="btn btn-default">
+                <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+            </button>
+            <button id="clear" class="btn btn-danger">
+                <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="buttonSize">
+            <h3>
+                Size (<span id="showSize">5</span>)
+            </h3>
+            <input type="range" min="1" max="50" value="5" step="1" id="controlSize">
+        </div>
+        <h3>Extra</h3>
+        <div class="extra">
+            <form action={% if create_story %}
+                  "
+                  {% url 'submitstory' %}
+                  "
+                  {% else %}
+                  "
+                  {% url 'submitimage' story_id %}
+                  "
+                  {% endif %}
+                  method="post"
+                  id="form1">
+                {% csrf_token %}
+                <input type="hidden" name="canvasData" id="my_hidden">
+                {% if create_story %}
+                    <label for="story_title">Story Title:</label>
+                    <br>
+                    <input type="text" id="story_title" name="story_title">
+                    <br>
+                {% endif %}
+                <label for="image_text">Image Description:</label>
+                <br>
+                <input type="text" id="image_text" name="image_text">
+                <br>
+                <input type="submit" name="submit_button" value="submit" onclick="save()">
+            </form>
+            <script>
+                function save(){ 
+                    var canvas = document.getElementById('canvas');
+                    document.getElementById('my_hidden').value = canvas.toDataURL('image/png');
+                    document.forms["form1"].submit(); 
+                }
+            </script>
+            {% if submit_error %}
+                <a>Error: {{ submit_error }}</a>
+            {% endif %}
+        </div>
+    </div>
 </body>
