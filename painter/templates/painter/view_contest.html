@@ -13,19 +13,23 @@
   </head>
   <body class="container " style="padding-top: 5%;">
     <div class="row">
+      <h3>{{ story.title }}</h3>
       <a href={% url 'createcontest' story.pk %}>
         <button>Add Submission</button>
       </a>
-      <h3>{{ story.title }}</h3>
+      <a href={% url 'closecontest' story.pk %}>
+        <button>Close Contest</button>
+      </a>
       {% for x in locked_images %}
         <div class="col-md-4">
           <div class="thumbnail">
-            <a href="{{ x.image.url }}">
-              <img src="{{ x.image.url }}" alt="Lights" style="width:100%">
+            <a href="{% url 'viewimage' story.pk x.pk %}">
+              <img src="{{ x.image.image.url }}" alt="No Image Found" style="width:100%">
               <div class="caption">
-                <p>{{ x.text }}</p>
+                <p>{{ x.image.text }}</p>
               </div>
             </a>
+            <p>Votes: {{ x.votes }}</p>
           </div>
         </div>
       {% endfor %}

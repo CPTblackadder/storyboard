@@ -2,10 +2,13 @@ import base64
 import json
 
 from django.core.files.base import ContentFile
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic.list import ListView
+
+from painter.management.commands.closecontests import close_image_contest
 
 from .models import (
     ActiveStoryContestModel,
@@ -14,6 +17,7 @@ from .models import (
     LockedStoryContestModel,
     Story,
     StoryContestImageModel,
+    StoryContestImageModelVote,
 )
 
 # Create your views here.
@@ -56,9 +60,7 @@ def submit_new_story(request):
             first_image_contest = LockedStoryContestModel(
                 story=story, winning_image=image
             )
-            contest = ActiveStoryContestModel(
-                story=story
-            )
+            contest = ActiveStoryContestModel(story=story)
             contest.save()
             first_image_contest.save()
             return redirect(view_story, story_id=story.pk)
@@ -126,6 +128,23 @@ def view_story(request, story_id):
     )
 
 
+def vote_for_image(request, story_id, image_id):
+    # TODO add user auth
+    image = get_object_or_404(StoryContestImageModel, pk=image_id)
+    StoryContestImageModelVote(image=image).save()
+    return redirect(view_contest, story_id)
+
+
+def view_image(request, story_id, image_id):
+    story = get_object_or_404(Story, pk=story_id)
+    image = get_object_or_404(StoryContestImageModel, pk=image_id)
+    return render(
+        request,
+        "painter/view_image.html",
+        {"story": story, "image": image},
+    )
+
+
 def main(request):
     data = Story.objects.all()
     context = {"data": data}
@@ -135,9 +154,19 @@ def main(request):
 def view_contest(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
     contest = get_object_or_404(ActiveStoryContestModel, story=story)
-    locked_images = Image.objects.filter(storycontestimagemodel__story_contest=contest)
+
+    images = StoryContestImageModel.objects.filter(story_contest=contest).annotate(
+        votes=Count("storycontestimagemodelvote")
+    )
     return render(
         request,
         "painter/view_contest.html",
-        {"story": story, "contest": contest, "locked_images": locked_images},
+        {"story": story, "contest": contest, "locked_images": images},
     )
+
+
+def close_contest(request, story_id):
+    story = get_object_or_404(Story, pk=story_id)
+    contest = get_object_or_404(ActiveStoryContestModel, story=story)
+    close_image_contest(contest)
+    return redirect(view_contest, story_id)
