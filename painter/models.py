@@ -25,20 +25,26 @@ class ActiveStoryContestModel(models.Model):
 
     def winner(self, winning_image):
         locker_contest = LockedStoryContestModel(
-            story=self.story, winning_image=winning_image
+            story=self.story,
+            winning_image=winning_image.image,
+            winning_votes_count=StoryContestImageModelVote.objects.filter(
+                image=winning_image
+            ).count(),
+            close_votes_count=CloseStoryContestModelVote.objects.filter(
+                contest=self
+            ).count(),
         )
         locker_contest.save()
         for image in StoryContestImageModel.objects.filter(story_contest=self):
             if image != winning_image:
                 LockedStoryContestImageModel(
-                    story_contest=locker_contest, image=image
+                    story_contest=locker_contest,
+                    image=image.image,
+                    votes_count=StoryContestImageModelVote.objects.filter(
+                        image=image
+                    ).count(),
                 ).save()
-            for vote in StoryContestImageModelVote.objects.filter(image=image):
-                LockedStoryContestImageModelVote(image=vote.image).save()
             image.delete()
-        for vote in CloseStoryContestModelVote.objects.filter(contest=self):
-            LockedCloseStoryContestModelVote(contest=locker_contest).save()
-            vote.delete()
 
 
 class LockedStoryContestModel(models.Model):
@@ -46,6 +52,8 @@ class LockedStoryContestModel(models.Model):
     winning_image: models.ForeignKey = models.ForeignKey(
         Image, on_delete=models.RESTRICT
     )
+    close_votes_count: models.IntegerField = models.IntegerField()
+    winning_votes_count: models.IntegerField = models.IntegerField()
     time: models.DateTimeField = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -56,6 +64,7 @@ class LockedStoryContestImageModel(models.Model):
     story_contest: models.ForeignKey = models.ForeignKey(
         LockedStoryContestModel, on_delete=models.CASCADE
     )
+    votes_count: models.IntegerField = models.IntegerField()
     image: models.ForeignKey = models.ForeignKey(Image, on_delete=models.RESTRICT)
 
 
@@ -76,15 +85,4 @@ class StoryContestImageModelVote(models.Model):
 class CloseStoryContestModelVote(models.Model):
     contest: models.ForeignKey = models.ForeignKey(
         ActiveStoryContestModel, on_delete=models.CASCADE
-    )
-
-class LockedCloseStoryContestModelVote(models.Model):
-    contest: models.ForeignKey = models.ForeignKey(
-        LockedStoryContestModel, on_delete=models.CASCADE
-    )
-
-
-class LockedStoryContestImageModelVote(models.Model):
-    image: models.ForeignKey = models.ForeignKey(
-        LockedStoryContestImageModel, on_delete=models.CASCADE
     )

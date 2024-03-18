@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand, CommandError
 from painter.models import (
     ActiveStoryContestModel,
     CloseStoryContestModelVote,
-    LockedStoryContestImageModelVote,
     Story,
     StoryContestImageModel,
     StoryContestImageModelVote,
@@ -34,7 +33,7 @@ def close_image_contest(contest: ActiveStoryContestModel):
         for image in StoryContestImageModel.objects.filter(story_contest=contest)
     ]
     most_votes = max(options, key=attrgetter("votes"))
-    options = [i for i in options if i.votes == most_votes]
+    options = [i for i in options if i.votes == most_votes.votes]
     if len(options) != 1:
         pass
     else:

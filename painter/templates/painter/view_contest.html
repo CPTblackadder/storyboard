@@ -11,28 +11,6 @@
           crossorigin="anonymous">
     <title>Demo Gallery</title>
   </head>
-  <body class="container " style="padding-top: 5%;">
-    <div class="row">
-      <h3>{{ story.title }}</h3>
-      <a href={% url 'createcontest' story.pk %}>
-        <button>Add Submission</button>
-      </a>
-      <a href={% url 'closecontest' story.pk %}>
-        <button>Close Contest</button>
-      </a>
-      {% for x in locked_images %}
-        <div class="col-md-4">
-          <div class="thumbnail">
-            <a href="{% url 'viewimage' story.pk x.pk %}">
-              <img src="{{ x.image.image.url }}" alt="No Image Found" style="width:100%">
-              <div class="caption">
-                <p>{{ x.image.text }}</p>
-              </div>
-            </a>
-            <p>Votes: {{ x.votes }}</p>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </body>
+  <h1>{{ story.title }}</h1>
+  {% include "painter/contest_view_template.html" %}
 </html>

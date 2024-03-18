@@ -120,11 +120,22 @@ def view_stories(request):
 
 def view_story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
+    contest = ActiveStoryContestModel.objects.filter(story=story)
     locked_images = Image.objects.filter(lockedstorycontestmodel__story__pk=story_id)
+    contest = get_object_or_404(ActiveStoryContestModel, story=story)
+    contest_images = StoryContestImageModel.objects.filter(
+        story_contest=contest
+    ).annotate(votes=Count("storycontestimagemodelvote"))
+
     return render(
         request,
         "painter/view_story.html",
-        {"story": story, "locked_images": locked_images},
+        {
+            "story": story,
+            "locked_images": locked_images,
+            "contest": contest,
+            "contest_images": contest_images,
+        },
     )
 
 
@@ -161,7 +172,7 @@ def view_contest(request, story_id):
     return render(
         request,
         "painter/view_contest.html",
-        {"story": story, "contest": contest, "locked_images": images},
+        {"story": story, "contest": contest, "contest_images": images},
     )
 
 
@@ -169,4 +180,4 @@ def close_contest(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
     contest = get_object_or_404(ActiveStoryContestModel, story=story)
     close_image_contest(contest)
-    return redirect(view_contest, story_id)
+    return redirect(view_story, story_id)

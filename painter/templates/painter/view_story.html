@@ -13,7 +13,7 @@
   </head>
   <body class="container " style="padding-top: 5%;">
     <div class="row">
-      <h3>{{ story.title }}</h3>
+      <h1>{{ story.title }}</h1>
       {% for x in locked_images %}
         <div class="col-md-4">
           <div class="thumbnail">
@@ -26,6 +26,10 @@
           </div>
         </div>
       {% endfor %}
+      <h3>Next Image Contest</h3>
+      {% if contest %}
+        {% include "painter/contest_view_template.html" %}
+      {% endif %}
     </div>
   </body>
 </html>
