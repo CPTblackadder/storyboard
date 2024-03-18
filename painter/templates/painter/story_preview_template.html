@@ -1,0 +1,16 @@
+<a href={% url 'viewstory' story.pk %}>
+    <h3>{{ story.title }}</h3>
+</a>
+<div class="grid-container">
+    {% for x in story.images %}
+        <div class="grid-item">
+            <a href="{{ x.winning_image.image.url }}">
+                <img src="{{ x.winning_image.image.url }}"
+                     alt="Error: No Image Found"
+                     width="200"
+                     height="200">
+            </a>
+            <div class="caption">{{ x.winning_image.text }}</div>
+        </div>
+    {% endfor %}
+</div>

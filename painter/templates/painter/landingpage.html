@@ -1,20 +1,13 @@
 {% load static %}
 {% csrf_token %}
-<body class="container">
-  <h1>Storyboard Landing Page</h1>
-  <a href={% url 'createstory' %}>
-    <button>Create new Story</button>
-  </a>
-  <h1>Current Top Stories</h1>
-  <div class="row">
-    {% for x in data %}
-      <div class="col-md-4">
-        <div class="thumbnail">
-          <a href={% url 'viewstory' x.pk %}>
-            <p>{{ x.title }}</p>
-          </a>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-</body>
+<head>
+  <link rel="stylesheet" href="{% static 'painter/image_holder.css' %}">
+</head>
+<h1>Storyboard Landing Page</h1>
+<a href={% url 'createstory' %}>
+  <button>Create new Story</button>
+</a>
+<h1>Current Top Stories</h1>
+{% for story in data %}
+  <div class="container">{% include "painter/story_preview_template.html" %}</div>
+{% endfor %}

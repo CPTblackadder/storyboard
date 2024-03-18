@@ -2,7 +2,7 @@ import base64
 import json
 
 from django.core.files.base import ContentFile
-from django.db.models import Count
+from django.db.models import Count, F
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -106,12 +106,6 @@ def submit_new_image(request, story_id):
     return render(request, "painter/painter.html")
 
 
-def view_all(request):
-    data = Image.objects.all()
-    context = {"data": data}
-    return render(request, "painter/view_all_images.html", context)
-
-
 def view_stories(request):
     data = Story.objects.all()
     context = {"data": data}
@@ -120,22 +114,28 @@ def view_stories(request):
 
 def view_story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
+    story_images = Image.objects.filter(lockedstorycontestmodel__story__pk=story_id)
     contest = ActiveStoryContestModel.objects.filter(story=story)
-    locked_images = Image.objects.filter(lockedstorycontestmodel__story__pk=story_id)
-    contest = get_object_or_404(ActiveStoryContestModel, story=story)
-    contest_images = StoryContestImageModel.objects.filter(
-        story_contest=contest
-    ).annotate(votes=Count("storycontestimagemodelvote"))
+    data = {
+        "story": story,
+        "story_images": story_images,
+    }
+    contest_images = None
+    if len(contest) == 1:
+        contest_images = StoryContestImageModel.objects.filter(
+            story_contest=contest[0]
+        ).annotate(votes=Count("storycontestimagemodelvote"))
+        data.update(
+            {
+                "contest": contest,
+                "contest_images": contest_images,
+            }
+        )
 
     return render(
         request,
         "painter/view_story.html",
-        {
-            "story": story,
-            "locked_images": locked_images,
-            "contest": contest,
-            "contest_images": contest_images,
-        },
+        data,
     )
 
 
@@ -158,7 +158,12 @@ def view_image(request, story_id, image_id):
 
 def main(request):
     data = Story.objects.all()
+    for story in data:
+        images = LockedStoryContestModel.objects.filter(story=story)
+        print(images)
+        story.images = images
     context = {"data": data}
+    print(context["data"][6].images)
     return render(request, "painter/landingpage.html", context)
 
 

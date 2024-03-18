@@ -29,6 +29,5 @@ urlpatterns = [
         name="viewimage",
     ),
     path("story/<int:story_id>/submit", views.submit_new_image, name="submitimage"),
-    path("view", views.view_all, name="viewer"),
     path("stories", views.view_stories, name="stories"),
 ]
