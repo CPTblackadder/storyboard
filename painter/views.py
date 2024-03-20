@@ -53,14 +53,17 @@ def submit_new_story(request):
             print("Saving file " + "image_" + str(image.pk) + ".png")
             image.image.save("image_" + str(image.pk) + ".png", img_data)
             image.text = image_text
-            image.save()
             story = Story.objects.create()
             story.title = story_title
-            story.save()
             first_image_contest = LockedStoryContestModel(
-                story=story, winning_image=image
+                story=story,
+                winning_image=image,
+                close_votes_count=0,
+                winning_votes_count=0,
             )
             contest = ActiveStoryContestModel(story=story)
+            image.save()
+            story.save()
             contest.save()
             first_image_contest.save()
             return redirect(view_story, story_id=story.pk)
@@ -159,11 +162,11 @@ def view_image(request, story_id, image_id):
 def main(request):
     data = Story.objects.all()
     for story in data:
-        images = LockedStoryContestModel.objects.filter(story=story)
-        print(images)
-        story.images = images
+        images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
+        story.number_of_images = len(images)
+        story.more_than_five_images = story.number_of_images > 5
+        story.images = reversed(images[:5])
     context = {"data": data}
-    print(context["data"][6].images)
     return render(request, "painter/landingpage.html", context)
 
 

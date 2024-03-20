@@ -3,6 +3,8 @@ from django.db import models
 
 class Story(models.Model):
     title: models.CharField = models.CharField(max_length=100)
+    started: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    closed: models.DateTimeField = models.DateTimeField(null=True, blank=True)
 
 
 class Image(models.Model):

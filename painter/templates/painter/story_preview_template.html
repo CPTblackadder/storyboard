@@ -1,10 +1,22 @@
+{% load static %}
 <a href={% url 'viewstory' story.pk %}>
-    <h3>{{ story.title }}</h3>
+    <h2>{{ story.title }}</h2>
 </a>
 <div class="grid-container">
+    {% if story.more_than_five_images %}
+        <div class="grid-item">
+            <a href={% url 'viewstory' story.pk %}>
+                <img src="{% static 'painter/dots.png' %}"
+                     alt="Error: No Image Found"
+                     width="200"
+                     height="200">
+            </a>
+            <div class="caption">Click to view previous entries to story</div>
+        </div>
+    {% endif %}
     {% for x in story.images %}
         <div class="grid-item">
-            <a href="{{ x.winning_image.image.url }}">
+            <a href={% url 'viewstory' story.pk %}>
                 <img src="{{ x.winning_image.image.url }}"
                      alt="Error: No Image Found"
                      width="200"
