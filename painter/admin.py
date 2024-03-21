@@ -13,7 +13,7 @@ admin.site.register(Image, ImageAdmin)
 
 
 class StoryAdmin(admin.ModelAdmin):
-    list_display = ["title", "started", "closed"]
+    list_display = ["title", "started", "closed", "activestorycontestmodel"]
 
 
 admin.site.register(Story, StoryAdmin)

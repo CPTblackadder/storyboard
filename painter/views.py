@@ -160,13 +160,24 @@ def view_image(request, story_id, image_id):
 
 
 def main(request):
-    data = Story.objects.all()
-    for story in data:
+    open_stories = Story.objects.filter(activestorycontestmodel__isnull=False).order_by(
+        "-started"
+    )
+    closed_stories = Story.objects.filter(
+        activestorycontestmodel__isnull=True
+    ).order_by("-closed")
+    for story in open_stories:
         images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
         story.number_of_images = len(images)
         story.more_than_five_images = story.number_of_images > 5
         story.images = reversed(images[:5])
-    context = {"data": data}
+    for story in closed_stories:
+        images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
+        story.number_of_images = len(images)
+        story.more_than_five_images = story.number_of_images > 5
+        story.images = reversed(images[:5])
+
+    context = {"open_stories": open_stories, "closed_stories": closed_stories}
     return render(request, "painter/landingpage.html", context)
 
 

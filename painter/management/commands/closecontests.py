@@ -1,3 +1,4 @@
+import datetime
 from operator import attrgetter
 
 from django.core.management.base import BaseCommand, CommandError
@@ -57,4 +58,6 @@ class CloseVote:
 
     def do_action(self, contest: ActiveStoryContestModel):
         # Remove the contest
+        contest.story.closed = datetime.datetime.now(datetime.UTC)
+        contest.story.save()
         contest.delete()
