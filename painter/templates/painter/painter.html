@@ -29,16 +29,7 @@
         </div>
         <h3>Extra</h3>
         <div class="extra">
-            <form action={% if create_story %}
-                  "
-                  {% url 'submitstory' %}
-                  "
-                  {% else %}
-                  "
-                  {% url 'submitimage' story_id %}
-                  "
-                  {% endif %}
-                  method="post"
+            <form action={% if create_story %} "{% url 'submitstory' %}" {% else %} "{% url 'submitimage' story_id %}" {% endif %} method="post"
                   id="form1">
                 {% csrf_token %}
                 <input type="hidden" name="canvasData" id="my_hidden">
@@ -65,5 +56,18 @@
                 <a>Error: {{ submit_error }}</a>
             {% endif %}
         </div>
+        {% if previous_image %}
+            <a href={% url 'viewstory' story_id %}>
+                <h4>Previous Image in Story</h4>
+            </a>
+            <a href="{{ previous_image.image.url }}">
+                <img src="{{ previous_image.image.url }}"
+                     alt="Error: No Image Found"
+                     style="width:100%">
+            </a>
+            <div class="caption">
+                <p>{{ previous_image.text }}</p>
+            </div>
+        {% endif %}
     </div>
 </body>

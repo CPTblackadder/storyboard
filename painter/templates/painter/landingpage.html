@@ -2,6 +2,14 @@
 {% csrf_token %}
 <head>
   <link rel="stylesheet" href="{% static 'painter/image_holder.css' %}">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
 </head>
 <h1>Storyboard Landing Page</h1>
 <a href={% url 'createstory' %}>
@@ -11,7 +19,6 @@
 {% for story in open_stories %}
   <div class="container">{% include "painter/story_preview_template.html" %}</div>
 {% endfor %}
-
 <h1>Current Top Closed Stories</h1>
 {% for story in closed_stories %}
   <div class="container">{% include "painter/story_preview_template.html" %}</div>

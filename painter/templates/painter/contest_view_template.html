@@ -6,9 +6,10 @@
         <a href={% url 'closecontest' story.pk %}>
             <button>Close Contest</button>
         </a>
-        {% for x in contest_images %}
-            <div class="col-md-4">
-                <div class="thumbnail">
+        <h4>
+            Votes to close contest: {{ votes_to_close_contest }}
+            {% for x in contest_images %}
+                <div class="col-md-4">
                     <a href="{% url 'viewimage' story.pk x.pk %}">
                         <img src="{{ x.image.image.url }}" alt="No Image Found" style="width:100%">
                         <div class="caption">
@@ -16,8 +17,10 @@
                         </div>
                     </a>
                     <p>Votes: {{ x.votes }}</p>
+                    <a href={% url 'voteforimage' story.pk x.pk %}>
+                        <button>Vote for this Image</button>
+                    </a>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-</body>
+            {% endfor %}
+        </div>
+    </body>

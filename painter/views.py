@@ -1,6 +1,7 @@
 import base64
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.db.models import Count, F
 from django.http import HttpResponse
@@ -12,6 +13,7 @@ from painter.management.commands.closecontests import close_image_contest
 
 from .models import (
     ActiveStoryContestModel,
+    CloseStoryContestModelVote,
     Image,
     LockedStoryContestImageModel,
     LockedStoryContestModel,
@@ -28,11 +30,20 @@ def create_story_painter(request):
 
 
 def create_image_painter(request, story_id):
-    return render(request, "painter/painter.html", {"story_id": story_id})
+    previous_image = (
+        LockedStoryContestModel.objects.filter(story__pk=story_id)
+        .order_by("-id")[0]
+        .winning_image
+    )
+
+    return render(
+        request,
+        "painter/painter.html",
+        {"story_id": story_id, "previous_image": previous_image},
+    )
 
 
 def submit_new_story(request):
-    print("Submitting new story")
     if request.method == "POST":
         try:
             photo = request.POST["canvasData"]
@@ -41,8 +52,6 @@ def submit_new_story(request):
             else:
                 image_text = ""
             story_title = request.POST["story_title"]
-            print(story_title)
-            print(len(story_title))
             if len(story_title) <= 0:
                 raise Exception("Must have a story title")
             img_format, img_str = photo.split(";base64,")
@@ -50,7 +59,6 @@ def submit_new_story(request):
             img_data = ContentFile(base64.b64decode(img_str), name="temp." + ext)
             # Create and save image
             image = Image.objects.create()
-            print("Saving file " + "image_" + str(image.pk) + ".png")
             image.image.save("image_" + str(image.pk) + ".png", img_data)
             image.text = image_text
             story = Story.objects.create()
@@ -79,7 +87,7 @@ def submit_new_story(request):
 
 
 def submit_new_image(request, story_id):
-    print("Submitting new image to story")
+    print("Submitting new image")
     story_contest = get_object_or_404(ActiveStoryContestModel, pk=story_id)
     if request.method == "POST":
         try:
@@ -96,10 +104,10 @@ def submit_new_image(request, story_id):
             print("Saving file " + "image_" + str(image.pk) + ".png")
             image.image.save("image_" + str(image.pk) + ".png", img_data)
             image.text = image_text
-            image.save()
             contest_image = StoryContestImageModel(
                 story_contest=story_contest, image=image
             )
+            image.save()
             contest_image.save()
             return redirect(view_contest, story_id)
         except Exception as err:
@@ -123,17 +131,8 @@ def view_story(request, story_id):
         "story": story,
         "story_images": story_images,
     }
-    contest_images = None
     if len(contest) == 1:
-        contest_images = StoryContestImageModel.objects.filter(
-            story_contest=contest[0]
-        ).annotate(votes=Count("storycontestimagemodelvote"))
-        data.update(
-            {
-                "contest": contest,
-                "contest_images": contest_images,
-            }
-        )
+        data.update(get_contest_data(contest[0]))
 
     return render(
         request,
@@ -159,6 +158,7 @@ def view_image(request, story_id, image_id):
     )
 
 
+@login_required
 def main(request):
     open_stories = Story.objects.filter(activestorycontestmodel__isnull=False).order_by(
         "-started"
@@ -166,6 +166,8 @@ def main(request):
     closed_stories = Story.objects.filter(
         activestorycontestmodel__isnull=True
     ).order_by("-closed")
+    closed_stories = reversed(closed_stories[:3])
+    closed_stories = list(closed_stories)
     for story in open_stories:
         images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
         story.number_of_images = len(images)
@@ -184,15 +186,31 @@ def main(request):
 def view_contest(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
     contest = get_object_or_404(ActiveStoryContestModel, story=story)
-
-    images = StoryContestImageModel.objects.filter(story_contest=contest).annotate(
-        votes=Count("storycontestimagemodelvote")
-    )
+    data = {
+        "story": story,
+    }
+    data.update(get_contest_data(contest))
     return render(
         request,
         "painter/view_contest.html",
-        {"story": story, "contest": contest, "contest_images": images},
+        data,
     )
+
+
+def get_contest_data(contest):
+    votes_to_close_contest = CloseStoryContestModelVote.objects.filter(
+        contest=contest
+    ).count()
+    images = (
+        StoryContestImageModel.objects.filter(story_contest=contest)
+        .annotate(votes=Count("storycontestimagemodelvote"))
+        .order_by("-votes")
+    )
+    return {
+        "contest": contest,
+        "contest_images": images,
+        "votes_to_close_contest": votes_to_close_contest,
+    }
 
 
 def close_contest(request, story_id):
