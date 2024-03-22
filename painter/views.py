@@ -162,12 +162,10 @@ def view_image(request, story_id, image_id):
 def main(request):
     open_stories = Story.objects.filter(activestorycontestmodel__isnull=False).order_by(
         "-started"
-    )
+    )[:3]
     closed_stories = Story.objects.filter(
         activestorycontestmodel__isnull=True
-    ).order_by("-closed")
-    closed_stories = reversed(closed_stories[:3])
-    closed_stories = list(closed_stories)
+    ).order_by("-closed")[:3]
     for story in open_stories:
         images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
         story.number_of_images = len(images)
