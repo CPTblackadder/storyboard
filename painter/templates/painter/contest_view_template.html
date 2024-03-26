@@ -30,6 +30,17 @@
                 {% csrf_token %}
                 <button type="submit">Vote for this Image</button>
             </form>
+            {% if x.image.created_by == user %}
+                <form method="post"
+                      action="{% url 'deleteimage' story.pk x.pk %}"
+                      id="form1">
+                    {% csrf_token %}
+                    <input type="submit"
+                           name="delete_image_button"
+                           value="Delete this Image"
+                           onclick="delete_image_confirm()">
+                </form>
+            {% endif %}
         </div>
     {% endfor %}
 </div>

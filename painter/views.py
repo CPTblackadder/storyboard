@@ -1,4 +1,5 @@
 import base64
+import io
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -8,6 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic.list import ListView
+from PIL import Image as PILImage
 
 from painter.management.commands.closecontests import close_image_contest
 
@@ -61,7 +63,13 @@ def submit_new_story(request):
             print("I know this happens")
             img_format, img_str = photo.split(";base64,")
             ext = img_format.split("/")[-1]
-            img_data = ContentFile(base64.b64decode(img_str), name="temp." + ext)
+            decoded_img = base64.b64decode(img_str)
+            image = PILImage.open(io.BytesIO(decoded_img))
+            if image.height != 600:
+                raise Exception("Image height must be 600")
+            if image.width != 800:
+                raise Exception("Image width must be 800")
+            img_data = ContentFile(decoded_img, name="temp." + ext)
             # Create and save image
             image = Image(created_by=request.user, text=image_text)
             image.image.save("image_" + str(image.pk) + ".png", img_data)
@@ -101,7 +109,13 @@ def submit_new_image(request, story_id):
                 image_text = ""
             img_format, img_str = photo.split(";base64,")
             ext = img_format.split("/")[-1]
-            img_data = ContentFile(base64.b64decode(img_str), name="temp." + ext)
+            decoded_img = base64.b64decode(img_str)
+            image = PILImage.open(io.BytesIO(decoded_img))
+            if image.height != 600:
+                raise Exception("Image height must be 600")
+            if image.width != 800:
+                raise Exception("Image width must be 800")
+            img_data = ContentFile(decoded_img, name="temp." + ext)
             # Create and save image
             image = Image(created_by=request.user, text=image_text)
             print("Saving file " + "image_" + str(image.pk) + ".png")
@@ -182,6 +196,7 @@ def vote_to_finish_story(request, story_id):
             CloseStoryContestModelVote(voter=request.user, contest=contest).save()
     return redirect(view_story, story_id)
 
+
 @login_required
 def view_image(request, story_id, image_id):
     story = get_object_or_404(Story, pk=story_id)
@@ -237,4 +252,15 @@ def close_contest(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
     contest = get_object_or_404(ActiveStoryContestModel, story=story)
     close_image_contest(contest)
+    return redirect(view_story, story_id)
+
+
+@login_required
+def delete_image(request, story_id, image_id):
+    if request.method == "POST":
+        image = get_object_or_404(StoryContestImageModel, pk=image_id)
+        if image.image.created_by == request.user:
+            i = image.image
+            image.delete()
+            i.delete()
     return redirect(view_story, story_id)

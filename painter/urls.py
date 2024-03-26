@@ -28,6 +28,11 @@ urlpatterns = [
         views.view_image,
         name="viewimage",
     ),
+    path(
+        "story/<int:story_id>/delete/<int:image_id>",
+        views.delete_image,
+        name="deleteimage",
+    ),
     path("story/<int:story_id>/submit", views.submit_new_image, name="submitimage"),
     path("stories", views.view_stories, name="stories"),
 ]
