@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
-    <title>Demo Gallery</title>
-  </head>
-  <body class="container">
-    {% include "painter/story_view_template.html" %}
-      {% if contest %}
-        <h3>Next Image Contest</h3>
-        {% include "painter/contest_view_template.html" %}
-      {% endif %}
-  </body>
-</html>
+{% extends "painter/base.html" %}
+{% block content %}
+  {% include "painter/story_view_template.html" %}
+  {% if contest %}
+    <h3>Next Image Contest</h3>
+    {% include "painter/contest_view_template.html" %}
+  {% endif %}
+{% endblock content %}

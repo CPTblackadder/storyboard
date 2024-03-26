@@ -12,12 +12,12 @@ div#sidebar {
     left: 0;
     width: 150px;
     padding: 20px 20px;
-    top: 0;
+    top: 40px;
 }
 
 canvas#canvas {
     left: 300px;
-    top: 45px;
+    top: 80px;
 }
 
 .btn {

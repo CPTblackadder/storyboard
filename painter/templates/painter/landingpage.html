@@ -1,9 +1,5 @@
 {% extends "painter/base.html" %}
 {% block content %}
-  <h1>Storyboard Landing Page</h1>
-  <a href={% url 'createstory' %}>
-    <button>Create new Story</button>
-  </a>
   <h1>Current Top Open Stories</h1>
   {% for story in open_stories %}
     <div class="container">{% include "painter/story_preview_template.html" %}</div>
@@ -12,4 +8,4 @@
   {% for story in closed_stories %}
     <div class="container">{% include "painter/story_preview_template.html" %}</div>
   {% endfor %}
-{% endblock %}
+{% endblock content %}

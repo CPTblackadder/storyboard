@@ -25,10 +25,12 @@ from .models import (
 # Create your views here.
 
 
+@login_required
 def create_story_painter(request):
     return render(request, "painter/painter.html", {"create_story": True})
 
 
+@login_required
 def create_image_painter(request, story_id):
     previous_image = (
         LockedStoryContestModel.objects.filter(story__pk=story_id)
@@ -43,6 +45,7 @@ def create_image_painter(request, story_id):
     )
 
 
+@login_required
 def submit_new_story(request):
     if request.method == "POST":
         try:
@@ -86,6 +89,7 @@ def submit_new_story(request):
     return render(request, "painter/painter.html", {"create_story": True})
 
 
+@login_required
 def submit_new_image(request, story_id):
     print("Submitting new image")
     story_contest = get_object_or_404(ActiveStoryContestModel, pk=story_id)
@@ -117,12 +121,14 @@ def submit_new_image(request, story_id):
     return render(request, "painter/painter.html")
 
 
+@login_required
 def view_stories(request):
     data = Story.objects.all()
     context = {"data": data}
     return render(request, "painter/view_all_stories.html", context)
 
 
+@login_required
 def view_story(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
     story_images = Image.objects.filter(lockedstorycontestmodel__story__pk=story_id)
@@ -141,6 +147,7 @@ def view_story(request, story_id):
     )
 
 
+@login_required
 def vote_for_image(request, story_id, image_id):
     # TODO add user auth
     image = get_object_or_404(StoryContestImageModel, pk=image_id)
@@ -148,6 +155,7 @@ def vote_for_image(request, story_id, image_id):
     return redirect(view_story, story_id)
 
 
+@login_required
 def view_image(request, story_id, image_id):
     story = get_object_or_404(Story, pk=story_id)
     image = get_object_or_404(StoryContestImageModel, pk=image_id)
@@ -158,6 +166,7 @@ def view_image(request, story_id, image_id):
     )
 
 
+@login_required
 def main(request):
     open_stories = Story.objects.filter(activestorycontestmodel__isnull=False).order_by(
         "-started"
@@ -180,6 +189,7 @@ def main(request):
     return render(request, "painter/landingpage.html", context)
 
 
+@login_required
 def get_contest_data(contest):
     votes_to_close_contest = CloseStoryContestModelVote.objects.filter(
         contest=contest
@@ -196,6 +206,7 @@ def get_contest_data(contest):
     }
 
 
+@login_required
 def close_contest(request, story_id):
     story = get_object_or_404(Story, pk=story_id)
     contest = get_object_or_404(ActiveStoryContestModel, story=story)

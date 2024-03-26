@@ -17,7 +17,17 @@
 {% endblock pre %}
 <body>
     <!-- Need a button for the home page and a button to logout, and a text saying you're logged in as: user -->
-    <div id="topbar">Logged in as: {{ user.username }}</div>
+    <div class="topnav">
+        <a href="{% url "landingpage" %}"
+           {% if request.resolver_match.view_name == "landingpage" %}class="active"{% endif %}>Home</a>
+        <a href="{% url 'createstory' %}"
+           {% if request.resolver_match.view_name == "createstory" %}class="active"{% endif %}>Create new Story</a>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        <span>Logged in as: {{ user.username }}</span>
+    </div>
     {% block content %}
     {% endblock content %}
 </body>
