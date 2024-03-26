@@ -1,26 +1,35 @@
-<body class="container " style="padding-top: 5%;">
-    <div class="row">
-        <a href={% url 'createcontest' story.pk %}>
-            <button>Add Submission</button>
-        </a>
-        <a href={% url 'closecontest' story.pk %}>
-            <button>Close Contest</button>
-        </a>
-        <h4>
-            Votes to close contest: {{ votes_to_close_contest }}
-            {% for x in contest_images %}
-                <div class="col-md-4">
-                    <a href="{% url 'viewimage' story.pk x.pk %}">
-                        <img src="{{ x.image.image.url }}" alt="No Image Found" style="width:100%">
-                        <div class="caption">
-                            <p>{{ x.image.text }}</p>
-                        </div>
-                    </a>
-                    <p>Votes: {{ x.votes }}</p>
-                    <a href={% url 'voteforimage' story.pk x.pk %}>
-                        <button>Vote for this Image</button>
-                    </a>
+<div class="row">
+    <a href={% url 'createcontest' story.pk %}>
+        <button>Add Submission</button>
+    </a>
+    <a href={% url 'closecontest' story.pk %}>
+        <button>Close Contest</button>
+    </a>
+    <form method="post" action="{% url 'votetofinish' story.pk %}">
+        {% csrf_token %}
+        <button type="submit">Vote to finish this Story</button>
+    </form>
+    <h4>
+        {% if votes_to_close_contest == 1 %}
+            1 Vote to finish the story.
+        {% else %}
+            {{ votes_to_close_contest }} Votes to finish the story.
+        {% endif %}
+    </h4>
+    {% for x in contest_images %}
+        <div class="col-md-4">
+            <a href="{% url 'viewimage' story.pk x.pk %}">
+                <img src="{{ x.image.image.url }}" alt="No Image Found" style="width:100%">
+                <div class="caption">
+                    <span>{{ x.image.text }}</span>
                 </div>
-            {% endfor %}
+            </a>
+            <span>Author: {{ x.image.created_by.username }}</span>
+            <p>Votes: {{ x.votes }}</p>
+            <form method="post" action="{% url 'voteforimage' story.pk x.pk %}">
+                {% csrf_token %}
+                <button type="submit">Vote for this Image</button>
+            </form>
         </div>
-    </body>
+    {% endfor %}
+</div>

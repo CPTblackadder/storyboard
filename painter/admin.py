@@ -1,10 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-from painter.models import Image, Story
+from painter.models import Image, Story, User
+
 
 # Register your models here.
-
-
 class ImageAdmin(admin.ModelAdmin):
     list_display = ["image"]
 
@@ -17,3 +17,6 @@ class StoryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Story, StoryAdmin)
+
+
+admin.site.register(User, UserAdmin)

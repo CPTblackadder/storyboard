@@ -1,17 +1,16 @@
 <h1>{{ story.title }}</h1>
-    <div class="row">
-        {% for x in story_images %}
-            <div class="col-md-3">
-                <div class="thumbnail">
-                    <a href="{{ x.image.url }}">
-                        <img src="{{ x.image.url }}"
-                             alt="Error: No Image Found"
-                             style="width:100%">
-                    </a>
-                    <div class="caption">
-                        <p>{{ x.text }}</p>
-                    </div>
-                </div>
+<div class="row">
+    {% for x in story_images %}
+        <div class="col-md-3">
+            <div class="thumbnail">
+                <a href="{{ x.image.url }}">
+                    <img src="{{ x.image.url }}"
+                         alt="Error: No Image Found"
+                         style="width:100%">
+                    <span>{{ x.text }}</span>
+                </a>
+                <span>Author: {{ x.created_by.username }}</span>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+    {% endfor %}
+</div>

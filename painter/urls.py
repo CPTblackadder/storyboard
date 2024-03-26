@@ -19,6 +19,11 @@ urlpatterns = [
         name="voteforimage",
     ),
     path(
+        "story/<int:story_id>/vote_to_finish",
+        views.vote_to_finish_story,
+        name="votetofinish",
+    ),
+    path(
         "story/<int:story_id>/view/<int:image_id>",
         views.view_image,
         name="viewimage",

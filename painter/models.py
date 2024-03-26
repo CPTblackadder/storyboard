@@ -1,4 +1,11 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from storyboard import settings
+
+
+class User(AbstractUser):
+    pass
 
 
 class Story(models.Model):
@@ -8,6 +15,10 @@ class Story(models.Model):
 
 
 class Image(models.Model):
+    created_by: models.ForeignKey = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
     image: models.ImageField = models.ImageField(upload_to="pics")
     text: models.CharField = models.CharField(max_length=128)
 
@@ -78,13 +89,20 @@ class StoryContestImageModel(models.Model):
 
 
 class StoryContestImageModelVote(models.Model):
-    # user
+    voter: models.ForeignKey = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
     image: models.ForeignKey = models.ForeignKey(
         StoryContestImageModel, on_delete=models.CASCADE
     )
 
 
 class CloseStoryContestModelVote(models.Model):
+    voter: models.ForeignKey = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
     contest: models.ForeignKey = models.ForeignKey(
         ActiveStoryContestModel, on_delete=models.CASCADE
     )

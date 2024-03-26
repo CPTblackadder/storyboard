@@ -47,6 +47,7 @@ def create_image_painter(request, story_id):
 
 @login_required
 def submit_new_story(request):
+    print("This must be happening")
     if request.method == "POST":
         try:
             photo = request.POST["canvasData"]
@@ -57,15 +58,14 @@ def submit_new_story(request):
             story_title = request.POST["story_title"]
             if len(story_title) <= 0:
                 raise Exception("Must have a story title")
+            print("I know this happens")
             img_format, img_str = photo.split(";base64,")
             ext = img_format.split("/")[-1]
             img_data = ContentFile(base64.b64decode(img_str), name="temp." + ext)
             # Create and save image
-            image = Image.objects.create()
+            image = Image(created_by=request.user, text=image_text)
             image.image.save("image_" + str(image.pk) + ".png", img_data)
-            image.text = image_text
-            story = Story.objects.create()
-            story.title = story_title
+            story = Story(title=story_title)
             first_image_contest = LockedStoryContestModel(
                 story=story,
                 winning_image=image,
@@ -80,7 +80,6 @@ def submit_new_story(request):
             return redirect(view_story, story_id=story.pk)
         except Exception as err:
             print("Error: " + str(err))
-            # TODO improve failure case
             return render(
                 request,
                 "painter/painter.html",
@@ -104,10 +103,9 @@ def submit_new_image(request, story_id):
             ext = img_format.split("/")[-1]
             img_data = ContentFile(base64.b64decode(img_str), name="temp." + ext)
             # Create and save image
-            image = Image.objects.create()
+            image = Image(created_by=request.user, text=image_text)
             print("Saving file " + "image_" + str(image.pk) + ".png")
             image.image.save("image_" + str(image.pk) + ".png", img_data)
-            image.text = image_text
             contest_image = StoryContestImageModel(
                 story_contest=story_contest, image=image
             )
@@ -149,11 +147,40 @@ def view_story(request, story_id):
 
 @login_required
 def vote_for_image(request, story_id, image_id):
-    # TODO add user auth
-    image = get_object_or_404(StoryContestImageModel, pk=image_id)
-    StoryContestImageModelVote(image=image).save()
+    if request.method == "POST":
+        image = get_object_or_404(StoryContestImageModel, pk=image_id)
+        image_votes = StoryContestImageModelVote.objects.filter(
+            voter=request.user, image__story_contest__story__pk=story_id
+        )
+        if image_votes.count() < 1:
+            # Check for close image contest votes
+            close_votes = CloseStoryContestModelVote.objects.filter(
+                voter=request.user, contest__story__pk=story_id
+            )
+            if close_votes.count() >= 1:
+                close_votes[0].delete()
+            StoryContestImageModelVote(voter=request.user, image=image).save()
+        else:
+            image_votes[0].delete()
+            StoryContestImageModelVote(voter=request.user, image=image).save()
     return redirect(view_story, story_id)
 
+
+@login_required
+def vote_to_finish_story(request, story_id):
+    if request.method == "POST":
+        contest = get_object_or_404(ActiveStoryContestModel, pk=story_id)
+        close_votes = CloseStoryContestModelVote.objects.filter(
+            voter=request.user, contest__story__pk=story_id
+        )
+        if close_votes.count() == 0:
+            image_votes = StoryContestImageModelVote.objects.filter(
+                voter=request.user, image__story_contest__story__pk=story_id
+            )
+            if image_votes.count() >= 1:
+                image_votes[0].delete()
+            CloseStoryContestModelVote(voter=request.user, contest=contest).save()
+    return redirect(view_story, story_id)
 
 @login_required
 def view_image(request, story_id, image_id):
@@ -189,7 +216,6 @@ def main(request):
     return render(request, "painter/landingpage.html", context)
 
 
-@login_required
 def get_contest_data(contest):
     votes_to_close_contest = CloseStoryContestModelVote.objects.filter(
         contest=contest

@@ -31,10 +31,7 @@
         </div>
         <h3>Extra</h3>
         <div class="extra">
-            <form action="{% if create_story %}" " {% url 'submitstory' %} " {% else %} " {% url 'submitimage' story_id %} " {% endif %} method="
-                  post
-                  "
-                  id="form1">
+            <form action={% if create_story %} {% url 'submitstory' %} {% else %} {% url 'submitimage' story_id %} {% endif %} method="post" id="form1">
                 {% csrf_token %}
                 <input type="hidden" name="canvasData" id="my_hidden">
                 {% if create_story %}
