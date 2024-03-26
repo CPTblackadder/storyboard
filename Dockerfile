@@ -12,5 +12,6 @@ RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-
-COPY . /app/
+COPY manage.py /app/manage.py
+COPY /painter/ /app/painter
+COPY /storyboard/ /app/storyboard

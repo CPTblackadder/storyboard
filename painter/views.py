@@ -109,7 +109,7 @@ def submit_new_image(request, story_id):
             )
             image.save()
             contest_image.save()
-            return redirect(view_contest, story_id)
+            return redirect(view_story, story_id)
         except Exception as err:
             print("Error: " + str(err))
             # TODO improve failure case
@@ -145,7 +145,7 @@ def vote_for_image(request, story_id, image_id):
     # TODO add user auth
     image = get_object_or_404(StoryContestImageModel, pk=image_id)
     StoryContestImageModelVote(image=image).save()
-    return redirect(view_contest, story_id)
+    return redirect(view_story, story_id)
 
 
 def view_image(request, story_id, image_id):
@@ -158,7 +158,6 @@ def view_image(request, story_id, image_id):
     )
 
 
-@login_required
 def main(request):
     open_stories = Story.objects.filter(activestorycontestmodel__isnull=False).order_by(
         "-started"
@@ -179,20 +178,6 @@ def main(request):
 
     context = {"open_stories": open_stories, "closed_stories": closed_stories}
     return render(request, "painter/landingpage.html", context)
-
-
-def view_contest(request, story_id):
-    story = get_object_or_404(Story, pk=story_id)
-    contest = get_object_or_404(ActiveStoryContestModel, story=story)
-    data = {
-        "story": story,
-    }
-    data.update(get_contest_data(contest))
-    return render(
-        request,
-        "painter/view_contest.html",
-        data,
-    )
 
 
 def get_contest_data(contest):

@@ -8,11 +8,6 @@ urlpatterns = [
     path("create/submit", views.submit_new_story, name="submitstory"),
     path("story/<int:story_id>", views.view_story, name="viewstory"),
     path(
-        "story/<int:story_id>/contest",
-        views.view_contest,
-        name="viewcontest",
-    ),
-    path(
         "story/<int:story_id>/create", views.create_image_painter, name="createcontest"
     ),
     path(  # Remove after done testing

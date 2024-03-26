@@ -1,8 +1,10 @@
+{% extends "painter/base.html" %}
 {% load static %}
-{% csrf_token %}
-<link rel="stylesheet" href="{% static 'painter/style.css' %}">
-<script defer src="{% static 'painter/painter.js' %}"></script>
-<body>
+{% block pre %}
+    <link rel="stylesheet" href="{% static 'painter/style.css' %}">
+    <script defer src="{% static 'painter/painter.js' %}"></script>
+{% endblock pre %}
+{% block content %}
     <div id="sidebar">
         <div class="colorButtons">
             <h3>Colour</h3>
@@ -29,7 +31,9 @@
         </div>
         <h3>Extra</h3>
         <div class="extra">
-            <form action={% if create_story %} "{% url 'submitstory' %}" {% else %} "{% url 'submitimage' story_id %}" {% endif %} method="post"
+            <form action="{% if create_story %}" " {% url 'submitstory' %} " {% else %} " {% url 'submitimage' story_id %} " {% endif %} method="
+                  post
+                  "
                   id="form1">
                 {% csrf_token %}
                 <input type="hidden" name="canvasData" id="my_hidden">
@@ -70,4 +74,4 @@
             </div>
         {% endif %}
     </div>
-</body>
+{% endblock content %}
