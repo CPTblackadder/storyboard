@@ -1,4 +1,4 @@
-<div class="row">
+<div>
     <a href={% url 'createcontest' story.pk %}>
         <button>Add Submission</button>
     </a>
@@ -16,10 +16,15 @@
             {{ votes_to_close_contest }} Votes to finish the story.
         {% endif %}
     </h4>
+    <div class="story-grid-container">
+
     {% for x in contest_images %}
-        <div class="col-md-4">
+        <div class="grid-item">
             <a href="{% url 'viewimage' story.pk x.pk %}">
-                <img src="{{ x.image.image.url }}" alt="No Image Found" style="width:100%">
+                <img src="{{ x.image.image.url }}"
+                        alt="No Image Found"
+                        width="800"
+                        height="600">
                 <div class="caption">
                     <span>{{ x.image.text }}</span>
                 </div>
@@ -43,4 +48,5 @@
             {% endif %}
         </div>
     {% endfor %}
+    </div>
 </div>

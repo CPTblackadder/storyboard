@@ -100,6 +100,18 @@ def submit_new_story(request):
 def submit_new_image(request, story_id):
     print("Submitting new image")
     story_contest = get_object_or_404(ActiveStoryContestModel, pk=story_id)
+    existing_image = StoryContestImageModel.objects.filter(
+        story_contest=story_contest, image__created_by=request.user
+    )
+    if existing_image.count() >= 1:
+        return render(
+            request,
+            "painter/painter.html",
+            {
+                "story_id": story_id,
+                "submit_error": "You already have a submitted image, delete that first",
+            },
+        )
     if request.method == "POST":
         try:
             photo = request.POST["canvasData"]
@@ -129,8 +141,18 @@ def submit_new_image(request, story_id):
         except Exception as err:
             print("Error: " + str(err))
             # TODO improve failure case
-            return render(request, "painter/painter.html", {"submit_error": str(err)})
-    return render(request, "painter/painter.html")
+            return render(
+                request,
+                "painter/painter.html",
+                {"story_id": story_id, "submit_error": str(err)},
+            )
+    return render(
+        request,
+        "painter/painter.html",
+        {
+            "story_id": story_id,
+        },
+    )
 
 
 @login_required
@@ -210,25 +232,33 @@ def view_image(request, story_id, image_id):
 
 @login_required
 def main(request):
+    open_stories = get_open_stories()
+    closed_stories = get_closed_stories()
+
+    context = {"open_stories": open_stories, "closed_stories": closed_stories}
+    return render(request, "painter/landingpage.html", context)
+
+def get_open_stories():
     open_stories = Story.objects.filter(activestorycontestmodel__isnull=False).order_by(
         "-started"
     )[:3]
-    closed_stories = Story.objects.filter(
-        activestorycontestmodel__isnull=True
-    ).order_by("-closed")[:3]
     for story in open_stories:
         images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
         story.number_of_images = len(images)
         story.more_than_five_images = story.number_of_images > 5
         story.images = reversed(images[:5])
+    return open_stories
+
+def get_closed_stories():
+    closed_stories = Story.objects.filter(
+        activestorycontestmodel__isnull=True
+    ).order_by("-closed")[:3]
     for story in closed_stories:
         images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
         story.number_of_images = len(images)
         story.more_than_five_images = story.number_of_images > 5
         story.images = reversed(images[:5])
-
-    context = {"open_stories": open_stories, "closed_stories": closed_stories}
-    return render(request, "painter/landingpage.html", context)
+    return closed_stories
 
 
 def get_contest_data(contest):

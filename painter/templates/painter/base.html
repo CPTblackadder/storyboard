@@ -5,11 +5,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
     <script defer src="{% static 'painter/base.js' %}"></script>
     {% block head %}
     {% endblock head %}
@@ -17,13 +12,15 @@
 {% block pre %}
 {% endblock pre %}
 <body>
-    <!-- Need a button for the home page and a button to logout, and a text saying you're logged in as: user -->
+    
     <div class="topnav">
         <a href="{% url "landingpage" %}"
            {% if request.resolver_match.view_name == "landingpage" %}class="active"{% endif %}>Home</a>
         <a href="{% url 'createstory' %}"
-           {% if request.resolver_match.view_name == "createstory" %}class="active"{% endif %}>Create new Story</a>
-        <form method="post" action="{% url 'logout' %}">
+           {% if request.resolver_match.view_name == "createstory" %}class="active"{% endif %}>Create New Story</a>
+        <a href="{% url 'stories' %}"
+           {% if request.resolver_match.view_name == "stories" %}class="active"{% endif %}>View All Stories</a>
+        <form class="logoutform" method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit">Logout</button>
         </form>

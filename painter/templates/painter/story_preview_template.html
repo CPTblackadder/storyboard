@@ -2,7 +2,7 @@
 <a href={% url 'viewstory' story.pk %}>
     <h2>{{ story.title }}</h2>
 </a>
-<div class="grid-container">
+<div class="frontpage-grid-container">
     {% if story.more_than_five_images %}
         <div class="grid-item">
             <a href={% url 'viewstory' story.pk %}>
