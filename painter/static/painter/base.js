@@ -1,6 +1,6 @@
-function delete_image_confirm() {
+function delete_image_confirm(form) {
     console.log("Button pressed");
     if (confirm('Do you want to delete this Image?')) {
-        document.forms["form1"].submit();
+        form.submit();
     }
 }

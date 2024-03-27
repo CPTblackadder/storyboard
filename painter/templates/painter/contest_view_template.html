@@ -17,36 +17,36 @@
         {% endif %}
     </h4>
     <div class="story-grid-container">
-
-    {% for x in contest_images %}
-        <div class="grid-item">
-            <a href="{% url 'viewimage' story.pk x.pk %}">
-                <img src="{{ x.image.image.url }}"
-                        alt="No Image Found"
-                        width="800"
-                        height="600">
-                <div class="caption">
-                    <span>{{ x.image.text }}</span>
+        {% for x in contest_images %}
+            <div class="grid-item">
+                <a href="{% url 'viewimage' story.pk x.pk %}">
+                    <img src="{{ x.image.image.url }}"
+                         alt="No Image Found"
+                         width="800"
+                         height="600">
+                    <div class="caption">
+                        <span>{{ x.image.text }}</span>
+                    </div>
+                </a>
+                <span>Author: {{ x.image.created_by.username }}</span>
+                <p>Votes: {{ x.votes }}</p>
+                <div class="contestimageinteractions">
+                    <form method="post" action="{% url 'voteforimage' story.pk x.pk %}">
+                        {% csrf_token %}
+                        <button class="button-5" type="submit">Vote for this Image</button>
+                    </form>
+                    {% if x.image.created_by == user %}
+                        <form method="post"
+                              action="{% url 'deleteimage' story.pk x.pk %}"
+                              id="form{{ x.pk }}">
+                            {% csrf_token %}
+                        </form>
+                        <button class="button-5"
+                                name="delete_image_button"
+                                onclick="delete_image_confirm(form{{ x.pk }})">Delete this Image</button>
+                    {% endif %}
                 </div>
-            </a>
-            <span>Author: {{ x.image.created_by.username }}</span>
-            <p>Votes: {{ x.votes }}</p>
-            <form method="post" action="{% url 'voteforimage' story.pk x.pk %}">
-                {% csrf_token %}
-                <button type="submit">Vote for this Image</button>
-            </form>
-            {% if x.image.created_by == user %}
-                <form method="post"
-                      action="{% url 'deleteimage' story.pk x.pk %}"
-                      id="form1">
-                    {% csrf_token %}
-                    <input type="submit"
-                           name="delete_image_button"
-                           value="Delete this Image"
-                           onclick="delete_image_confirm()">
-                </form>
-            {% endif %}
-        </div>
-    {% endfor %}
+            </div>
+        {% endfor %}
     </div>
 </div>

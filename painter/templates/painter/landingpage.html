@@ -2,10 +2,10 @@
 {% block content %}
   <h1>Current Top Open Stories</h1>
   {% for story in open_stories %}
-    <div class="container">{% include "painter/story_preview_template.html" %}</div>
+    {% include "painter/story_preview_template.html" %}
   {% endfor %}
   <h1>Current Top Closed Stories</h1>
   {% for story in closed_stories %}
-    <div class="container">{% include "painter/story_preview_template.html" %}</div>
+    {% include "painter/story_preview_template.html" %}
   {% endfor %}
 {% endblock content %}

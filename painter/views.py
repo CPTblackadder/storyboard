@@ -4,6 +4,7 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
+from django.core.paginator import Paginator
 from django.db.models import Count, F
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -157,8 +158,13 @@ def submit_new_image(request, story_id):
 
 @login_required
 def view_stories(request):
-    data = Story.objects.all()
-    context = {"data": data}
+    stories = Story.objects.all()
+    paginated = Paginator(stories, 5)
+    page_number = request.GET.get("page")  # Get the requested page number from the URL
+
+    page = paginated.get_page(page_number)
+    annotate_stories(page)
+    context = {"page": page}
     return render(request, "painter/view_all_stories.html", context)
 
 
@@ -238,27 +244,29 @@ def main(request):
     context = {"open_stories": open_stories, "closed_stories": closed_stories}
     return render(request, "painter/landingpage.html", context)
 
+
 def get_open_stories():
     open_stories = Story.objects.filter(activestorycontestmodel__isnull=False).order_by(
         "-started"
     )[:3]
-    for story in open_stories:
-        images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
-        story.number_of_images = len(images)
-        story.more_than_five_images = story.number_of_images > 5
-        story.images = reversed(images[:5])
+    annotate_stories(open_stories)
     return open_stories
+
 
 def get_closed_stories():
     closed_stories = Story.objects.filter(
         activestorycontestmodel__isnull=True
     ).order_by("-closed")[:3]
-    for story in closed_stories:
+    annotate_stories(closed_stories)
+    return closed_stories
+
+
+def annotate_stories(stories):
+    for story in stories:
         images = LockedStoryContestModel.objects.filter(story=story).order_by("-id")
         story.number_of_images = len(images)
         story.more_than_five_images = story.number_of_images > 5
         story.images = reversed(images[:5])
-    return closed_stories
 
 
 def get_contest_data(contest):

@@ -1,17 +1,24 @@
 {% extends "painter/base.html" %}
 {% block content %}
-  <div class="row">
-    {% for x in data %}
-      <div class="col-md-4">
-        <div class="thumbnail">
-          <a href="{{ x.photo.url }}">
-            <img src="{{ x.photo.url }}" alt="Lights"  width=800 height=600>
-            <div class="caption">
-              <p>{{ x.title }}</p>
-            </div>
-          </a>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
+  {% for story in page %}
+    {% include "painter/story_preview_template.html" %}
+  {% endfor %}
+  {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}"
+       class="btn btn-secondary mx-2">Previous</a>
+  {% endif %}
+  <a href="?page=1" class="btn btn-secondary">First</a>
+  {% for num in page.paginator.page_range %}
+    {% if num == page.number %}
+      <span>{{ num }}</span>
+    {% else %}
+      <a href="?page={{ num }}" class="btn btn-secondary mx-2">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+  <a href="?page={{ page.paginator.num_pages }}"
+     class="btn btn-secondary mx-2">Last</a>
+  {% if page.has_next %}
+    <a href="?page={{ page.next_page_number }}"
+       class="btn btn-secondary mx-2">Next</a>
+  {% endif %}
 {% endblock content %}

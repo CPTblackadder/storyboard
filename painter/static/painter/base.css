@@ -6,15 +6,15 @@
 
 .grid-item {
     background-color: rgba(255, 255, 255, 0.8);
-    /* border: 1fr solid rgba(0, 0, 0, 0.8); */
-    /* padding: 2fr; */
     font-size: 20px;
     text-align: center;
+    padding: 5px;
+    border-radius: 0px;
 }
 
 .story-grid-container {
     display: grid;
-    grid-template-columns: repeat(5, 20fr);
+    grid-template-columns: repeat(4, 20fr);
     background-color: #2196F3;
 }
 
@@ -28,15 +28,18 @@
     object-fit: contain;
 }
 
+.contestimageinteractions {}
+
 /* Add a black background color to the top navigation */
 .topnav {
     background-color: #333;
     overflow: hidden;
     width: 100%;
-    position: absolute;
     left: 0px;
     right: 0px;
     top: 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 /* Style the links inside the navigation bar */
@@ -102,6 +105,18 @@
     color: black;
 }
 
-.logoutform {
-    height: auto;
+html {
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0px;
+    min-height: 100%;
+    width: 100%;
+}
+
+.subcontent {
+    margin: 8px;
 }

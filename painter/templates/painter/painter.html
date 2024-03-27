@@ -31,7 +31,13 @@
         </div>
         <h3>Extra</h3>
         <div class="extra">
-            <form action={% if create_story %} {% url 'submitstory' %} {% else %} {% url 'submitimage' story_id %} {% endif %} method="post" id="form1">
+            <form action={% if create_story %}
+                  {% url 'submitstory' %}
+                  {% else %}
+                  {% url 'submitimage' story_id %}
+                  {% endif %}
+                  id="form1"
+                  method="post">
                 {% csrf_token %}
                 <input type="hidden" name="canvasData" id="my_hidden">
                 {% if create_story %}
@@ -63,8 +69,12 @@
             </a>
             <a href="{{ previous_image.image.url }}">
                 <img src="{{ previous_image.image.url }}"
-                     alt="Error: No Image Found"  width=800 height=600
-                     style="width:100%">
+                     alt="Error: No Image Found"
+                     width="800"
+                     height="600"
+                     style="width:100%;
+                            height:100%;
+                            object-fit: contain">
             </a>
             <div class="caption">
                 <p>{{ previous_image.text }}</p>

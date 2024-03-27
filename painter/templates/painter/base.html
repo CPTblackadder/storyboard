@@ -2,6 +2,7 @@
 {% csrf_token %}
 <head>
     <link rel="stylesheet" href="{% static 'painter/base.css' %}">
+    <link rel="stylesheet" href="{% static 'painter/button.css' %}">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +13,6 @@
 {% block pre %}
 {% endblock pre %}
 <body>
-    
     <div class="topnav">
         <a href="{% url "landingpage" %}"
            {% if request.resolver_match.view_name == "landingpage" %}class="active"{% endif %}>Home</a>
@@ -26,6 +26,9 @@
         </form>
         <span>Logged in as: {{ user.username }}</span>
     </div>
-    {% block content %}
-    {% endblock content %}
+    <div class="subcontent">
+        {% block content %}
+
+        {% endblock content %}
+    </div>
 </body>
